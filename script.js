@@ -1,6 +1,6 @@
 /**
  * Lógica de Auditoria VDC
- * Eduardo - Auditoria e Peritagem
+ * Eduardo Monteiro - Auditoria e Peritagem
  */
 
 function executarAuditoria() {
@@ -52,7 +52,7 @@ function gerarPdfEvidencia() {
             </div>
             
             <p><strong>Data de Emissão:</strong> ${dataRelatorio}</p>
-            <p><strong>Entidade Responsável:</strong> VDC Voz do CondutorA</p>
+            <p><strong>Entidade Responsável:</strong> VDC Voz do Condutor</p>
             <hr>
             
             <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
