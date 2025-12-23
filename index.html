@@ -4,71 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auditoria de Taxas | Voz do Condutor</title>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
     <style>
         :root { --navy: #000080; --gold: #c5a059; --danger: #d32f2f; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; color: #333; }
-        
-        .container { max-width: 450px; margin: auto; background: #fff; padding: 30px; border-radius: 15px; border-top: 8px solid var(--navy); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .container { max-width: 450px; margin: auto; background: #fff; padding: 30px; border-radius: 15px; border-top: 8px solid var(--navy); box-shadow: 0 10px 30px rgba(0,0,0,0.1); box-sizing: border-box; }
         h2 { text-align: center; color: var(--navy); text-transform: uppercase; font-size: 1.2rem; margin-bottom: 25px; }
-        
         .form-group { margin-bottom: 15px; }
         label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 5px; color: #555; }
         input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
-        
         .btn-calc { width: 100%; background: var(--navy); color: white; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        .btn-calc:hover { background: #000066; }
-        
         .btn-pdf { width: 100%; background: #444; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
-        
         .results-box { margin-top: 25px; padding: 20px; background: #f9f9f9; border-radius: 8px; border: 1px solid #eee; display: none; }
         .res-line { display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #eee; }
         .res-val { font-weight: bold; color: var(--navy); }
-        
         footer { text-align: center; margin-top: 50px; color: #777; font-size: 0.8rem; line-height: 1.5; }
-        .vdc-brand { color: var(--navy); font-weight: bold; }
-
-        @media (max-width: 480px) { .container { padding: 20px; } }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <h2>Auditoria Forense de Taxas</h2>
-    
-    <div class="form-group">
-        <label>Valor Total do Cliente (€)</label>
-        <input type="number" id="bruto" step="0.01" placeholder="Ex: 12.50">
+    <div class="container">
+        <h2>Auditoria Forense de Taxas</h2>
+        <div class="form-group"><label>Valor Total do Cliente (€)</label><input type="number" id="bruto" step="0.01"></div>
+        <div class="form-group"><label>Valor Líquido Recebido (€)</label><input type="number" id="liquido" step="0.01"></div>
+        <div class="form-group"><label>Taxa Nominal Contratada (%)</label><input type="number" id="taxaNominal" value="25"></div>
+        <button class="btn-calc" onclick="executarAuditoria()">Analisar Discrepâncias</button>
+        <button id="btnPdf" class="btn-pdf" onclick="gerarPdfEvidencia()">📥 Descarregar Prova Técnica (PDF)</button>
+        <div id="results" class="results-box">
+            <div class="res-line"><span>Comissão Retida:</span> <span id="resEuro" class="res-val">-</span></div>
+            <div class="res-line"><span>Taxa Real Aplicada:</span> <span id="resTaxa" class="res-val">-</span></div>
+            <div class="res-line"><span>Diferencial:</span> <span id="resDif" class="res-val">-</span></div>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label>Valor Líquido Recebido (€)</label>
-        <input type="number" id="liquido" step="0.01" placeholder="Ex: 8.20">
-    </div>
-
-    <div class="form-group">
-        <label>Taxa Nominal Contratada (%)</label>
-        <input type="number" id="taxaNominal" value="25">
-    </div>
-
-    <button class="btn-calc" onclick="executarAuditoria()">Analisar Discrepâncias</button>
-    <button id="btnPdf" class="btn-pdf" onclick="gerarPdfEvidencia()">📥 Descarregar Prova Técnica (PDF)</button>
-
-    <div id="results" class="results-box">
-        <div class="res-line"><span>Comissão Retida:</span> <span id="resEuro" class="res-val">-</span></div>
-        <div class="res-line"><span>Taxa Real Aplicada:</span> <span id="resTaxa" class="res-val">-</span></div>
-        <div class="res-line"><span>Diferencial:</span> <span id="resDif" class="res-val">-</span></div>
-    </div>
-</div>
-
-<footer>
-    <p>Desenvolvido por <span class="vdc-brand">Voz Do Condutor</span> — Plataforma</p>
-    <p>Unidade de Inteligência | VDC</p>
-    <p>© 2025 | Segurança e Rigor de Dados</p>
-</footer>
-
-<script src="script.js"></script>
+    <footer>
+        <p>Desenvolvido por <strong>Voz Do Condutor</strong> — Unidade de Inteligência TVDE</p>
+    </footer>
+    <script src="script.js"></script>
 </body>
 </html>
