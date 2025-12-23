@@ -3,203 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auditoria de Taxas VDC | Inteligência e Peritagem</title>
+    <title>Auditoria de Taxas | Voz do Condutor</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        :root { 
-            --navy: #000080; 
-            --gold: #c5a059; 
-            --light-bg: #f4f7f9; 
-            --danger: #d32f2f;
-            --success: #2e7d32;
-        }
+        :root { --navy: #000080; --gold: #c5a059; --danger: #d32f2f; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; color: #333; }
+        
+        .container { max-width: 450px; margin: auto; background: #fff; padding: 30px; border-radius: 15px; border-top: 8px solid var(--navy); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: var(--navy); text-transform: uppercase; font-size: 1.2rem; margin-bottom: 25px; }
+        
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 5px; color: #555; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
+        
+        .btn-calc { width: 100%; background: var(--navy); color: white; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-calc:hover { background: #000066; }
+        
+        .btn-pdf { width: 100%; background: #444; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
+        
+        .results-box { margin-top: 25px; padding: 20px; background: #f9f9f9; border-radius: 8px; border: 1px solid #eee; display: none; }
+        .res-line { display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #eee; }
+        .res-val { font-weight: bold; color: var(--navy); }
+        
+        footer { text-align: center; margin-top: 50px; color: #777; font-size: 0.8rem; line-height: 1.5; }
+        .vdc-brand { color: var(--navy); font-weight: bold; }
 
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: var(--light-bg); 
-            color: #333; 
-            margin: 0; 
-            padding: 0; 
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 20px;
-        }
-
-        .audit-card { 
-            max-width: 500px; 
-            margin: 20px auto; 
-            background: white; 
-            padding: 25px; 
-            border-radius: 12px; 
-            border-top: 6px solid var(--navy); 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-        }
-
-        h2 { 
-            color: var(--navy); 
-            text-align: center; 
-            text-transform: uppercase; 
-            font-size: 1.2rem; 
-            margin-bottom: 25px; 
-            letter-spacing: 1px;
-        }
-
-        .input-group { margin-bottom: 18px; }
-
-        label { 
-            display: block; 
-            font-weight: 600; 
-            margin-bottom: 8px; 
-            font-size: 0.85rem; 
-            color: var(--navy);
-        }
-
-        input { 
-            width: 100%; 
-            padding: 12px; 
-            border: 1px solid #ddd; 
-            border-radius: 6px; 
-            box-sizing: border-box; 
-            font-size: 1rem; 
-            transition: border-color 0.3s;
-        }
-
-        input:focus {
-            border-color: var(--gold);
-            outline: none;
-        }
-
-        .btn-main { 
-            width: 100%; 
-            background: var(--navy); 
-            color: white; 
-            padding: 15px; 
-            border: none; 
-            border-radius: 6px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            transition: 0.3s; 
-            margin-top: 10px;
-            text-transform: uppercase;
-        }
-
-        .btn-main:hover { background: #000066; }
-
-        .btn-pdf { 
-            width: 100%; 
-            background: #555; 
-            color: white; 
-            padding: 12px; 
-            border: none; 
-            border-radius: 6px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            margin-top: 10px;
-            display: none; /* Só aparece após o cálculo */
-        }
-
-        .results { 
-            margin-top: 25px; 
-            padding: 20px; 
-            border-radius: 8px; 
-            display: none; 
-            background: #fff; 
-            border: 1px solid #eee; 
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        .result-item { 
-            display: flex; 
-            justify-content: space-between; 
-            margin-bottom: 12px; 
-            padding-bottom: 8px; 
-            border-bottom: 1px solid #f0f0f0; 
-            font-size: 0.9rem;
-        }
-
-        #resDif { font-weight: bold; }
-
-        .legal-note { 
-            font-size: 0.7rem; 
-            color: #888; 
-            margin-top: 20px; 
-            text-align: center; 
-            line-height: 1.4;
-        }
-
-        /* Footer Otimizado */
-        footer {
-            background-color: #000040;
-            color: #ffffff;
-            padding: 30px 20px;
-            text-align: center;
-        }
-
-        .footer-content p { margin: 5px 0; font-size: 0.85rem; }
-        .footer-links { margin: 15px 0; font-size: 0.75rem; }
-        .footer-links a { color: var(--gold); text-decoration: none; margin: 0 10px; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 480px) {
-            .audit-card { margin: 10px; padding: 20px; }
-            h2 { font-size: 1rem; }
-        }
+        @media (max-width: 480px) { .container { padding: 20px; } }
     </style>
 </head>
 <body>
 
-<div class="main-content">
-    <div class="audit-card">
-        <h2>Auditoria de Taxas de Intermediação</h2>
-        
-        <div class="input-group">
-            <label>Valor Bruto da Viagem (Pago pelo Cliente)</label>
-            <input type="number" id="bruto" placeholder="0.00" step="0.01">
-        </div>
+<div class="container">
+    <h2>Auditoria Forense de Taxas</h2>
+    
+    <div class="form-group">
+        <label>Valor Total do Cliente (€)</label>
+        <input type="number" id="bruto" step="0.01" placeholder="Ex: 12.50">
+    </div>
 
-        <div class="input-group">
-            <label>Valor Líquido Recebido (Operador)</label>
-            <input type="number" id="liquido" placeholder="0.00" step="0.01">
-        </div>
+    <div class="form-group">
+        <label>Valor Líquido Recebido (€)</label>
+        <input type="number" id="liquido" step="0.01" placeholder="Ex: 8.20">
+    </div>
 
-        <div class="input-group">
-            <label>Taxa Nominal Contratada (%)</label>
-            <input type="number" id="taxaNominal" value="25">
-        </div>
+    <div class="form-group">
+        <label>Taxa Nominal Contratada (%)</label>
+        <input type="number" id="taxaNominal" value="25">
+    </div>
 
-        <button class="btn-main" onclick="calcularAuditoria()">Executar Auditoria</button>
-        <button id="btnPdf" class="btn-pdf" onclick="gerarPdfEvidencia()">📥 Gerar PDF de Evidência</button>
+    <button class="btn-calc" onclick="executarAuditoria()">Analisar Discrepâncias</button>
+    <button id="btnPdf" class="btn-pdf" onclick="gerarPdfEvidencia()">📥 Descarregar Prova Técnica (PDF)</button>
 
-        <div id="results" class="results">
-            <div class="result-item">
-                <span>Comissão Retida (€):</span>
-                <span id="resComisEuro">-</span>
-            </div>
-            <div class="result-item">
-                <span>Taxa Real Aplicada:</span>
-                <span id="resTaxaReal">-</span>
-            </div>
-            <div class="result-item">
-                <span>Diferencial (Discrepância):</span>
-                <span id="resDif">-</span>
-            </div>
-            <p class="legal-note">Atenção: Diferenciais positivos indicam custos ocultos ou anomalias algorítmicas no fluxo financeiro.</p>
-        </div>
+    <div id="results" class="results-box">
+        <div class="res-line"><span>Comissão Retida:</span> <span id="resEuro" class="res-val">-</span></div>
+        <div class="res-line"><span>Taxa Real Aplicada:</span> <span id="resTaxa" class="res-val">-</span></div>
+        <div class="res-line"><span>Diferencial:</span> <span id="resDif" class="res-val">-</span></div>
     </div>
 </div>
 
 <footer>
-    <div class="footer-content">
-        <p><strong>DESENVOLVIDO POR <span style="color: var(--gold);">VOZ DO CONDUTOR</span></strong></p>
-        <p>Unidade de Inteligência | VDC</p>
+    <p>Desenvolvido por <span class="vdc-brand">Voz Do Condutor</span> — Plataforma</p>
+    <p>Unidade de Inteligência | VDC Voz do Condutor</p>
+    <p>© 2025 | Segurança e Rigor de Dados</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
